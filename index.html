@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAGETA — Laporan Persediaan Getah, Perum Perhutani</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<style>
+:root{
+  --forest-900:#142A1C; --forest-800:#1F3D2B; --forest-700:#26452F; --forest-600:#3A5C42;
+  --forest-100:#B9C9B4; --forest-50:#E6EDE3;
+  --wood-600:#8A6A3B; --wood-500:#A97C50; --gold-500:#D8A657;
+  --cream-100:#F5F1E4; --cream-200:#EDE7D9; --cream-50:#FBF9F3;
+  --line:#D9D0B5; --text-dark:#2A2718; --text-mid:#5B5646; --text-muted:#8A8367;
+  --danger:#A32D2D; --danger-bg:#FCEBEB; --success:#3B6D11;
+}
+*{box-sizing:border-box;}
+body{margin:0; font-family:'Source Sans 3',sans-serif; background:var(--cream-200); color:var(--text-dark);}
+h1,h2,h3{font-family:'Source Serif 4',serif;}
+
+.demo-switch{
+  background:var(--forest-900); padding:10px 20px; display:flex; align-items:center; gap:8px;
+  flex-wrap:wrap; position:sticky; top:0; z-index:100; border-bottom:2px solid var(--gold-500);
+}
+.demo-switch .label{color:var(--forest-100); font-size:11px; margin-right:6px; text-transform:uppercase; letter-spacing:0.5px;}
+.demo-switch button{font-family:'Source Sans 3',sans-serif; font-size:12.5px; font-weight:500; padding:7px 14px; border-radius:20px; border:1px solid transparent; background:transparent; color:#B9C9B4; cursor:pointer;}
+.demo-switch button.active{background:var(--gold-500); color:var(--forest-900); font-weight:600;}
+.demo-switch button:not(.active):hover{border-color:var(--forest-600); color:#fff;}
+
+.view{display:none;} .view.active{display:block;}
+.subview{display:none;} .subview.active{display:block;}
+
+/* login */
+.login-outer{min-height:calc(100vh - 52px); display:flex; align-items:center; justify-content:center; padding:40px 16px;}
+.login-shell{width:100%; max-width:380px; background:#fff; border-radius:14px; overflow:hidden; border:0.5px solid var(--line); box-shadow:0 8px 24px rgba(20,42,28,0.10);}
+.login-header{background:var(--forest-800); padding:34px 24px 26px; text-align:center;}
+.login-mark{width:56px; height:56px; border-radius:50%; background:var(--forest-600); border:2px solid var(--wood-500); display:flex; align-items:center; justify-content:center; margin:0 auto 14px;}
+.login-mark i{font-size:28px; color:var(--cream-100);}
+.login-title{font-family:'Source Serif 4',serif; font-size:24px; font-weight:600; color:var(--cream-50); letter-spacing:1px;}
+.login-tagline{font-size:12px; color:var(--forest-100); margin-top:5px;}
+.login-org{font-size:11px; color:#8AA089; margin-top:2px;}
+.login-body{padding:28px 24px 20px;}
+.forgot{text-align:right; font-size:12px; color:var(--wood-600); margin:-4px 0 18px; cursor:pointer;}
+.role-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:4px;}
+.role-chip{text-align:center; padding:10px 4px; border:1.5px solid var(--line); border-radius:8px; background:var(--cream-100); cursor:pointer;}
+.role-chip i{font-size:17px; color:var(--forest-600);}
+.role-chip span{display:block; font-size:10px; color:var(--text-mid); margin-top:4px;}
+.role-chip.selected{border-color:var(--gold-500); background:var(--forest-50);}
+.role-chip.selected i, .role-chip.selected span{color:var(--forest-800); font-weight:600;}
+.divider{display:flex; align-items:center; gap:8px; margin:20px 0 14px;}
+.divider div{flex:1; height:0.5px; background:var(--line);}
+.divider span{font-size:11px; color:var(--text-muted);}
+.icon-input{position:relative;}
+.icon-input i{position:absolute; left:11px; top:50%; transform:translateY(-50%); font-size:16px; color:var(--text-muted);}
+.icon-input input{padding-left:34px;}
+.login-note{font-size:11.5px; color:var(--text-muted); text-align:center; margin-top:14px; line-height:1.5;}
+
+/* app shell */
+.app-shell{min-height:calc(100vh - 52px); display:flex; flex-direction:column;}
+.topbar{background:var(--forest-800); padding:12px 24px; display:flex; align-items:center; justify-content:space-between;}
+.brand{display:flex; align-items:center; gap:10px;}
+.brand-mark{width:34px; height:34px; border-radius:50%; background:var(--forest-600); border:1.5px solid var(--wood-500); display:flex; align-items:center; justify-content:center;}
+.brand-mark i{font-size:17px; color:var(--cream-100);}
+.brand-name{font-family:'Source Serif 4',serif; font-size:17px; font-weight:600; color:var(--cream-50); letter-spacing:0.5px;}
+.topbar-right{display:flex; align-items:center; gap:18px;}
+.topbar-right > i{font-size:18px; color:var(--forest-100); cursor:pointer;}
+.avatar{width:28px; height:28px; border-radius:50%; background:var(--wood-500); color:var(--forest-900); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; flex-shrink:0;}
+
+/* profile dropdown */
+.profile{position:relative;}
+.profile-btn{display:flex; align-items:center; gap:8px; cursor:pointer; padding:4px 6px; border-radius:8px;}
+.profile-btn:hover{background:rgba(255,255,255,0.06);}
+.profile-btn span{font-size:12px; color:var(--cream-100);}
+.profile-btn i.ti-chevron-down{font-size:13px; color:var(--forest-100);}
+.profile-menu{position:absolute; top:42px; right:0; background:#fff; border:0.5px solid var(--line); border-radius:10px; box-shadow:0 10px 26px rgba(20,42,28,0.16); min-width:190px; padding:6px; display:none; z-index:250;}
+.profile-menu.open{display:block;}
+.profile-menu a{display:flex; align-items:center; gap:9px; padding:9px 10px; font-size:13px; color:var(--text-dark); border-radius:6px; cursor:pointer; text-decoration:none;}
+.profile-menu a:hover{background:var(--cream-100);}
+.profile-menu a i{font-size:16px; color:var(--text-muted); width:16px;}
+.profile-menu hr{border:none; border-top:0.5px solid var(--line); margin:6px 2px;}
+
+.body-row{display:flex; flex:1; min-height:0;}
+.sidebar{width:190px; flex-shrink:0; background:var(--forest-700); padding:16px 0;}
+.sidebar a{display:flex; align-items:center; gap:10px; padding:10px 20px; text-decoration:none; font-size:13px; color:var(--forest-100); border-left:3px solid transparent; cursor:pointer;}
+.sidebar a i{font-size:17px;}
+.sidebar a.active{background:var(--forest-600); color:var(--cream-50); border-left-color:var(--gold-500);}
+.main{flex:1; padding:24px 28px; min-width:0;}
+.main-full{padding:24px 28px;}
+
+.eyebrow{font-size:12px; color:var(--text-muted); margin-bottom:2px;}
+.page-title{font-family:'Source Serif 4',serif; font-size:22px; font-weight:600; color:var(--forest-800); margin:0 0 4px;}
+.page-sub{font-size:13px; color:var(--text-muted); margin-bottom:20px;}
+
+.card{background:#fff; border:0.5px solid var(--line); border-radius:10px; padding:16px 18px;}
+.metric-label{font-size:11px; color:var(--text-muted);}
+.metric-value{font-size:22px; font-weight:600; color:var(--forest-800); margin-top:6px;}
+.metric-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-bottom:22px;}
+.metric-accent{border:2px solid var(--gold-500);}
+.metric-accent .metric-label, .metric-accent .metric-value{color:var(--wood-600);}
+
+/* KPI card (dashboard) */
+.kpi-card{background:#fff; border:0.5px solid var(--line); border-radius:10px; padding:14px 16px; display:flex; align-items:center; gap:12px;}
+.kpi-icon{width:38px; height:38px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.kpi-icon i{font-size:17px;}
+.kpi-icon.i-produksi{background:var(--forest-50); color:var(--forest-700);}
+.kpi-icon.i-angkutan{background:#F3EADA; color:var(--wood-600);}
+.kpi-icon.i-sisa{background:#FBF1DE; color:#A9762E;}
+.kpi-card.kpi-sisa{border:1.5px solid var(--gold-500);}
+.kpi-body{min-width:0;}
+
+table{width:100%; border-collapse:collapse; font-size:12.5px;}
+thead td{padding:8px 14px; background:transparent; color:var(--text-muted); font-weight:600; font-size:10.5px; text-transform:uppercase; letter-spacing:0.4px; border-bottom:1px solid var(--line);}
+tbody td{padding:8px 14px; border-top:0.5px solid var(--cream-200); color:var(--text-dark);}
+tbody tr.clickable{cursor:pointer;}
+tbody tr.clickable:hover{background:var(--cream-50);}
+.text-right{text-align:right;}
+.table-card{overflow:hidden; padding:0;}
+
+/* compact dashboard list rows (replaces heavy tables on dashboard views) */
+.list-card{overflow:hidden; padding:6px;}
+.list-row{display:flex; align-items:center; gap:12px; padding:10px 10px; border-radius:8px; cursor:pointer; flex-wrap:wrap;}
+.list-row:hover{background:var(--cream-50);}
+.list-row:not(:last-child){border-bottom:0.5px solid var(--cream-200);}
+.list-row-main{min-width:150px; display:flex; align-items:center; gap:8px; flex-shrink:0;}
+.list-row-name{font-size:13px; font-weight:500; color:var(--text-dark);}
+.list-row-nums{display:flex; gap:18px; font-size:12px; color:var(--text-mid); flex-shrink:0; margin-left:auto;}
+.list-row-nums b{color:var(--forest-800); font-weight:600;}
+.list-row-nums .num-label{color:var(--text-muted); font-size:10px; display:block;}
+.list-row i.ti-chevron-right{font-size:14px; color:var(--text-muted); flex-shrink:0;}
+.list-empty{padding:24px; text-align:center; color:var(--text-muted); font-size:13px;}
+
+.form-group{margin-bottom:16px;}
+.form-group label{display:block; font-size:12px; color:var(--text-mid); margin-bottom:6px; font-weight:500;}
+.form-control{width:100%; height:38px; padding:0 12px; border:0.5px solid var(--line); border-radius:8px; font-size:14px; background:var(--cream-50); font-family:inherit;}
+select.form-control{background:var(--cream-50);}
+.form-row{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px;}
+.readonly-field{height:38px; display:flex; align-items:center; padding:0 12px; border-radius:8px; background:var(--forest-50); border:0.5px dashed var(--forest-600); font-size:14px; font-weight:600; color:var(--forest-800);}
+
+.btn{height:38px; padding:0 18px; border-radius:8px; font-size:13px; font-weight:500; border:0.5px solid var(--line); background:#fff; color:var(--text-dark); cursor:pointer;}
+.btn-primary{background:var(--forest-800); color:var(--cream-50); border:none;}
+.btn-outline{background:transparent; border:0.5px solid var(--forest-600); color:var(--forest-800);}
+.btn-row{display:flex; gap:10px; margin-top:8px;}
+
+.badge{font-size:11px; padding:3px 10px; border-radius:20px; font-weight:500;}
+.badge-mandor{background:var(--forest-50); color:var(--forest-800);}
+.badge-tad{background:#F3EADA; color:var(--wood-600);}
+.badge-active{background:#E9F1E2; color:var(--success);}
+.badge-inactive{background:var(--danger-bg); color:var(--danger);}
+.badge-system{background:var(--forest-50); color:var(--forest-700);}
+.badge-arsip{background:#EDE4F3; color:#6B3F94;}
+
+.section-header{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:10px;}
+.tabs{display:flex; gap:4px; margin-bottom:18px; border-bottom:0.5px solid var(--line); flex-wrap:wrap;}
+.tab{padding:9px 4px; margin-right:20px; font-size:13px; color:var(--text-muted); border-bottom:2px solid transparent; cursor:pointer;}
+.tab.active{color:var(--forest-800); border-bottom-color:var(--forest-800); font-weight:500;}
+.tabpanel{display:none;} .tabpanel.active{display:block;}
+
+footer.mini{text-align:center; padding:10px; font-size:11px; color:var(--text-muted); background:var(--cream-100); border-top:0.5px solid var(--line);}
+
+.banner{display:flex; gap:10px; align-items:flex-start; background:var(--forest-50); border:0.5px solid var(--forest-100); border-radius:10px; padding:12px 14px; margin-bottom:20px; font-size:12.5px; color:var(--forest-800);}
+.banner i{font-size:18px; color:var(--wood-600); margin-top:1px;}
+.section-title{font-size:14px; font-weight:600; color:var(--forest-800);}
+
+.filter-bar{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; align-items:flex-end;}
+.filter-bar .form-group{margin-bottom:0; min-width:190px;}
+
+.chart-card{margin-bottom:22px;}
+.chart-legend{display:flex; gap:16px; font-size:12px; color:var(--text-mid); margin-bottom:12px;}
+.legend-dot{width:10px; height:10px; border-radius:3px; display:inline-block; margin-right:6px; vertical-align:middle;}
+
+@media (max-width:640px){
+  .metric-grid{grid-template-columns:1fr;}
+  .list-row{flex-wrap:wrap;}
+  .list-row-nums{margin-left:auto;}
+}
+
+/* modal */
+.modal-mask{position:fixed; inset:0; background:rgba(20,42,28,0.45); display:none; align-items:center; justify-content:center; z-index:400; padding:16px;}
+.modal-mask.open{display:flex;}
+.modal-box{background:#fff; border-radius:12px; padding:22px; width:100%; max-width:400px;}
+.modal-box h3{margin:0 0 4px; font-size:17px; color:var(--forest-800); font-family:'Source Serif 4',serif;}
+.modal-sub{font-size:12px; color:var(--text-muted); margin-bottom:18px;}
+</style>
+</head>
+<body>
+
+<div class="demo-switch">
+  <span class="label">Demo peran</span>
+  <button class="active" data-view="login" onclick="goView('login')"><i class="ti ti-door-enter" aria-hidden="true"></i> Login</button>
+  <button data-view="krph" onclick="goView('krph')">KRPH</button>
+  <button data-view="dashboard" onclick="goView('dashboard')">Dashboard (Asper / KPH)</button>
+  <button data-view="admin" onclick="goView('admin')">Admin</button>
+</div>
+
+<!-- ======================================================= LOGIN ======================================================= -->
+<section class="view active" id="view-login">
+  <div class="login-outer">
+    <div class="login-shell">
+      <div class="login-header">
+        <div class="login-mark"><i class="ti ti-trees" aria-hidden="true"></i></div>
+        <div class="login-title">LAGETA</div>
+        <div class="login-tagline">Laporan Persediaan Getah</div>
+        <div class="login-org">Perum Perhutani</div>
+      </div>
+      <div class="login-body">
+        <form onsubmit="return false;">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <div class="icon-input"><i class="ti ti-user" aria-hidden="true"></i><input class="form-control" id="username" type="text" placeholder="krph.tegal01"></div>
+          </div>
+          <div class="form-group" style="margin-bottom:6px;">
+            <label for="password">Kata sandi</label>
+            <div class="icon-input"><i class="ti ti-lock" aria-hidden="true"></i><input class="form-control" id="password" type="password" placeholder="••••••••"></div>
+          </div>
+          <div class="forgot">Lupa kata sandi?</div>
+          <button class="btn btn-primary" style="width:100%;" type="submit" onclick="doLogin()">Masuk</button>
+        </form>
+        <div class="divider"><div></div><span>pilih peran untuk demo</span><div></div></div>
+        <div class="role-grid">
+          <div class="role-chip selected" data-role="krph" onclick="selectRole('krph')"><i class="ti ti-clipboard-text" aria-hidden="true"></i><span>KRPH</span></div>
+          <div class="role-chip" data-role="asper" onclick="selectRole('asper')"><i class="ti ti-map-2" aria-hidden="true"></i><span>Asper</span></div>
+          <div class="role-chip" data-role="kph" onclick="selectRole('kph')"><i class="ti ti-building-fortress" aria-hidden="true"></i><span>KPH</span></div>
+          <div class="role-chip" data-role="admin" onclick="selectRole('admin')"><i class="ti ti-settings" aria-hidden="true"></i><span>Admin</span></div>
+        </div>
+        <div class="login-note">Pilih peran lalu klik <strong>Masuk</strong> untuk melihat tampilan sesuai peran tersebut.</div>
+      </div>
+      <footer class="mini">v1.0 &middot; Sistem internal Perum Perhutani</footer>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= KRPH ======================================================= -->
+<section class="view" id="view-krph">
+  <div class="app-shell">
+    <div class="topbar">
+      <div class="brand"><div class="brand-mark"><i class="ti ti-trees" aria-hidden="true"></i></div><div class="brand-name">LAGETA</div></div>
+      <div class="topbar-right">
+        <i class="ti ti-bell" aria-hidden="true"></i>
+        <div class="profile" onclick="toggleProfileMenu(event,'krph')">
+          <div class="profile-btn"><div class="avatar">RH</div><span>KRPH Tegal 01</span><i class="ti ti-chevron-down" aria-hidden="true"></i></div>
+          <div class="profile-menu" id="profileMenu-krph">
+            <a onclick="openPasswordModal(event)"><i class="ti ti-key" aria-hidden="true"></i>Ganti kata sandi</a>
+            <hr>
+            <a onclick="goView('login')"><i class="ti ti-logout" aria-hidden="true"></i>Keluar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="body-row">
+      <div class="sidebar">
+        <a class="active" data-sub="krph-dashboard" onclick="goSub('krph','krph-dashboard')"><i class="ti ti-chart-bar" aria-hidden="true"></i>Dashboard</a>
+        <a data-sub="krph-riwayat-saya" onclick="goSub('krph','krph-riwayat-saya')"><i class="ti ti-list-details" aria-hidden="true"></i>Riwayat input saya</a>
+        <a data-sub="krph-riwayat-2minggu" onclick="goSub('krph','krph-riwayat-2minggu')"><i class="ti ti-history" aria-hidden="true"></i>Riwayat (2 minggu)</a>
+      </div>
+      <div class="main">
+
+        <!-- Dashboard KRPH -->
+        <div class="subview active" id="krph-dashboard">
+          <div class="eyebrow">Dashboard wilayah saya</div>
+          <div class="page-title">Resort Tegal 01</div>
+          <div class="page-sub">Periode berjalan &middot; 23 Jun &ndash; 6 Jul 2026</div>
+
+          <div class="metric-grid">
+            <div class="kpi-card">
+              <div class="kpi-icon i-produksi"><i class="ti ti-droplet" aria-hidden="true"></i></div>
+              <div class="kpi-body"><div class="metric-label">Total produksi</div><div class="metric-value" id="krphMetricProduksi">811 kg</div></div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon i-angkutan"><i class="ti ti-truck" aria-hidden="true"></i></div>
+              <div class="kpi-body"><div class="metric-label">Total angkutan</div><div class="metric-value" id="krphMetricAngkutan">594 kg</div></div>
+            </div>
+            <div class="kpi-card kpi-sisa">
+              <div class="kpi-icon i-sisa"><i class="ti ti-package" aria-hidden="true"></i></div>
+              <div class="kpi-body"><div class="metric-label">Sisa persediaan</div><div class="metric-value" id="krphMetricSisa">217 kg</div></div>
+            </div>
+          </div>
+
+          <div class="section-header">
+            <div class="section-title">Grafik harian &middot; produksi vs angkutan (kg)</div>
+            <button class="btn btn-primary" onclick="toggleKrphInputForm()"><i class="ti ti-plus" style="vertical-align:-2px; margin-right:4px;" aria-hidden="true"></i>Input data hari ini</button>
+          </div>
+
+          <div class="card" id="krphInputForm" style="display:none; max-width:480px; margin-bottom:20px;">
+            <div class="form-group">
+              <label>Nama mandor / TAD</label>
+              <select class="form-control" id="mandorSelect">
+                <option>Suryanto (Mandor)</option>
+                <option>Karto Wijaya (TAD)</option>
+                <option>Slamet Riyadi (Mandor)</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Produksi hari ini (kg)</label><input class="form-control" type="number" id="produksiInput" placeholder="0" oninput="hitungSisa()"></div>
+              <div class="form-group"><label>Angkutan hari ini (kg)</label><input class="form-control" type="number" id="angkutanInput" placeholder="0" oninput="hitungSisa()"></div>
+            </div>
+            <div class="form-group" style="margin-bottom:4px;">
+              <label>Sisa persediaan (kg) &middot; otomatis</label>
+              <div class="readonly-field" id="sisaOutput">0 kg</div>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="simpanKrphInput()">Simpan data</button>
+              <button class="btn btn-outline" onclick="batalInput()">Batal</button>
+            </div>
+          </div>
+
+          <div class="card chart-card">
+            <div class="chart-legend">
+              <span><span class="legend-dot" style="background:var(--forest-600);"></span>Produksi (kg)</span>
+              <span><span class="legend-dot" style="background:var(--gold-500);"></span>Angkutan (kg)</span>
+              <span><span class="legend-dot" style="background:var(--wood-500);"></span>Sisa (kg)</span>
+            </div>
+            <div id="krphChartSvg"></div>
+          </div>
+        </div>
+
+        <!-- Riwayat input saya -->
+        <div class="subview" id="krph-riwayat-saya">
+          <div class="eyebrow">Riwayat input saya</div>
+          <div class="page-title">Data periode berjalan</div>
+          <div class="page-sub">23 Jun &ndash; 6 Jul 2026 &middot; sebelum diarsipkan otomatis oleh sistem</div>
+          <div class="banner"><i class="ti ti-info-circle" aria-hidden="true"></i><div>Data ini masih bisa diedit selama belum diarsipkan. Sistem memindahkan data ke Riwayat secara otomatis setiap 14 hari.</div></div>
+          <div class="card table-card">
+            <table>
+              <thead><tr><td>Tanggal</td><td>Nama mandor / TAD</td><td class="text-right">Produksi (kg)</td><td class="text-right">Angkutan (kg)</td><td class="text-right">Sisa (kg)</td></tr></thead>
+              <tbody id="riwayatSayaBody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Riwayat 2 minggu -->
+        <div class="subview" id="krph-riwayat-2minggu">
+          <div class="eyebrow">Arsip data</div>
+          <div class="page-title">Riwayat 2 mingguan &middot; Resort Tegal 01</div>
+          <div class="page-sub">Data hasil arsip otomatis, dikelompokkan per periode backup</div>
+          <div class="form-group" style="max-width:320px; margin-bottom:20px;">
+            <label>Pilih periode backup</label>
+            <select class="form-control" id="krphPeriodeSelect" onchange="gantiPeriodeKrph(this.value)">
+              <option value="1">9 Jun &ndash; 22 Jun 2026</option>
+              <option value="2">26 Mei &ndash; 8 Jun 2026</option>
+              <option value="3">12 Mei &ndash; 25 Mei 2026</option>
+            </select>
+          </div>
+          <div class="card table-card">
+            <table>
+              <thead><tr><td>Nama mandor / TAD</td><td class="text-right">Produksi (kg)</td><td class="text-right">Angkutan (kg)</td><td class="text-right">Sisa (kg)</td></tr></thead>
+              <tbody id="krphRiwayat2mingguBody">
+                <tr><td>Suryanto</td><td class="text-right">410 kg</td><td class="text-right">390 kg</td><td class="text-right">20 kg</td></tr>
+                <tr><td>Karto Wijaya</td><td class="text-right">310 kg</td><td class="text-right">300 kg</td><td class="text-right">10 kg</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <footer class="mini">Data akan diarsipkan otomatis setiap 2 minggu &middot; LAGETA v1.0</footer>
+  </div>
+</section>
+
+<!-- ======================================================= DASHBOARD (ASPER / KPH) — satu halaman ======================================================= -->
+<section class="view" id="view-dashboard">
+  <div class="app-shell">
+    <div class="topbar">
+      <div class="brand"><div class="brand-mark"><i class="ti ti-trees" aria-hidden="true"></i></div><div class="brand-name">LAGETA</div></div>
+      <div class="topbar-right">
+        <i class="ti ti-bell" aria-hidden="true"></i>
+        <div class="profile" onclick="toggleProfileMenu(event,'dash')">
+          <div class="profile-btn"><div class="avatar" id="dashAvatar">AS</div><span id="dashUserName">Asper Wilayah II</span><i class="ti ti-chevron-down" aria-hidden="true"></i></div>
+          <div class="profile-menu" id="profileMenu-dash">
+            <a onclick="openPasswordModal(event)"><i class="ti ti-key" aria-hidden="true"></i>Ganti kata sandi</a>
+            <hr>
+            <a onclick="goView('login')"><i class="ti ti-logout" aria-hidden="true"></i>Keluar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="body-row">
+      <div class="sidebar">
+        <a class="active" data-sub="dash-dashboard" onclick="goSub('dashboard','dash-dashboard')"><i class="ti ti-chart-bar" aria-hidden="true"></i>Dashboard</a>
+        <a data-sub="dash-riwayat-2minggu" onclick="goSub('dashboard','dash-riwayat-2minggu')"><i class="ti ti-history" aria-hidden="true"></i>Riwayat (2 minggu)</a>
+      </div>
+      <div class="main">
+
+        <!-- Dashboard (periode berjalan) -->
+        <div class="subview active" id="dash-dashboard">
+          <div class="eyebrow">Rekap persediaan getah</div>
+          <div class="page-title" id="dashTitle">Ringkasan Wilayah II</div>
+          <div class="page-sub" id="dashSub">Periode berjalan &middot; 23 Jun &ndash; 6 Jul 2026</div>
+
+          <div class="filter-bar">
+            <div class="form-group">
+              <label>Filter KRPH</label>
+              <select class="form-control" id="dashKrphFilter" onchange="updateDashboard()">
+                <option value="all">Semua KRPH</option>
+                <option value="Resort Tegal 01">Resort Tegal 01</option>
+                <option value="Resort Tegal 02">Resort Tegal 02</option>
+                <option value="Resort Pemalang 01">Resort Pemalang 01</option>
+              </select>
+            </div>
+            <div class="form-group" style="min-width:130px;">
+              <label>Dari tanggal</label>
+              <input class="form-control" type="date" id="dashDateFrom" value="2026-06-23">
+            </div>
+            <div class="form-group" style="min-width:130px;">
+              <label>Sampai tanggal</label>
+              <input class="form-control" type="date" id="dashDateTo" value="2026-07-06">
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            <div class="kpi-card">
+              <div class="kpi-icon i-produksi"><i class="ti ti-droplet" aria-hidden="true"></i></div>
+              <div class="kpi-body"><div class="metric-label">Total produksi</div><div class="metric-value" id="dashMetricProduksi">1.240 kg</div></div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon i-angkutan"><i class="ti ti-truck" aria-hidden="true"></i></div>
+              <div class="kpi-body"><div class="metric-label">Total angkutan</div><div class="metric-value" id="dashMetricAngkutan">980 kg</div></div>
+            </div>
+            <div class="kpi-card kpi-sisa">
+              <div class="kpi-icon i-sisa"><i class="ti ti-package" aria-hidden="true"></i></div>
+              <div class="kpi-body"><div class="metric-label">Sisa persediaan</div><div class="metric-value" id="dashMetricSisa">260 kg</div></div>
+            </div>
+          </div>
+
+          <div class="card chart-card">
+            <div class="chart-legend">
+              <span><span class="legend-dot" style="background:var(--forest-600);"></span>Produksi (kg)</span>
+              <span><span class="legend-dot" style="background:var(--gold-500);"></span>Angkutan (kg)</span>
+              <span><span class="legend-dot" style="background:var(--wood-500);"></span>Sisa (kg)</span>
+            </div>
+            <div id="dashChartSvg"></div>
+          </div>
+
+          <div class="section-header">
+            <div class="section-title" id="dashTableTitle">Rekap per resort (KRPH)</div>
+            <span id="dashTableBadge" class="badge badge-active">Data periode berjalan</span>
+          </div>
+
+          <div class="card list-card" id="dashListCard">
+            <div id="dashTableBody"></div>
+          </div>
+        </div>
+
+        <!-- Riwayat 2 minggu (Asper / KPH) -->
+        <div class="subview" id="dash-riwayat-2minggu">
+          <div class="eyebrow">Arsip data</div>
+          <div class="page-title" id="riwayatDashTitle">Riwayat 2 mingguan &middot; Wilayah II</div>
+          <div class="page-sub" id="riwayatDashSub">Data hasil arsip otomatis, dikelompokkan per periode backup</div>
+
+          <div class="filter-bar">
+            <div class="form-group">
+              <label>Pilih periode backup</label>
+              <select class="form-control" id="riwayatPeriodeSelect" onchange="updateDashRiwayat()">
+                <option value="p1">9 Jun &ndash; 22 Jun 2026</option>
+                <option value="p2">26 Mei &ndash; 8 Jun 2026</option>
+                <option value="p3">12 Mei &ndash; 25 Mei 2026</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Filter KRPH</label>
+              <select class="form-control" id="riwayatKrphFilter" onchange="updateDashRiwayat()">
+                <option value="all">Semua KRPH</option>
+                <option value="Resort Tegal 01">Resort Tegal 01</option>
+                <option value="Resort Tegal 02">Resort Tegal 02</option>
+                <option value="Resort Pemalang 01">Resort Pemalang 01</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="section-header">
+            <div class="section-title" id="riwayatDashTableTitle">Rekap per resort (KRPH)</div>
+            <span class="badge badge-arsip">Data arsip</span>
+          </div>
+
+          <div class="card list-card" id="riwayatDashListCard">
+            <div id="riwayatDashTableBody"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <footer class="mini">Data akan diarsipkan otomatis setiap 2 minggu &middot; LAGETA v1.0</footer>
+  </div>
+</section>
+
+<!-- ======================================================= ADMIN — 2 halaman ======================================================= -->
+<section class="view" id="view-admin">
+  <div class="app-shell">
+    <div class="topbar">
+      <div class="brand"><div class="brand-mark"><i class="ti ti-trees" aria-hidden="true"></i></div><div class="brand-name">LAGETA</div></div>
+      <div class="topbar-right">
+        <i class="ti ti-bell" aria-hidden="true"></i>
+        <div class="profile" onclick="toggleProfileMenu(event,'admin')">
+          <div class="profile-btn"><div class="avatar">AD</div><span>Admin sistem</span><i class="ti ti-chevron-down" aria-hidden="true"></i></div>
+          <div class="profile-menu" id="profileMenu-admin">
+            <a onclick="openPasswordModal(event)"><i class="ti ti-key" aria-hidden="true"></i>Ganti kata sandi</a>
+            <hr>
+            <a onclick="goView('login')"><i class="ti ti-logout" aria-hidden="true"></i>Keluar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="body-row">
+      <div class="sidebar">
+        <a class="active" data-sub="admin-kelola" onclick="goSub('admin','admin-kelola')"><i class="ti ti-users" aria-hidden="true"></i>Kelola user</a>
+        <a data-sub="admin-backup" onclick="goSub('admin','admin-backup')"><i class="ti ti-history" aria-hidden="true"></i>Log backup</a>
+      </div>
+      <div class="main">
+
+        <!-- Kelola user (User + KRPH + Mandor/TAD dalam satu halaman) -->
+        <div class="subview active" id="admin-kelola">
+          <div class="eyebrow">Data master</div>
+          <div class="page-title">Kelola User</div>
+          <div class="page-sub">User login, wilayah KRPH, dan mandor/TAD dikelola dalam satu halaman</div>
+
+          <div class="tabs">
+            <div class="tab active" data-tab="tab-user" onclick="goTab('tab-user')">User</div>
+            <div class="tab" data-tab="tab-krph" onclick="goTab('tab-krph')">KRPH (wilayah)</div>
+            <div class="tab" data-tab="tab-mandor" onclick="goTab('tab-mandor')">Mandor / TAD</div>
+          </div>
+
+          <!-- Tab: User -->
+          <div class="tabpanel active" id="tab-user">
+            <div class="section-header">
+              <div style="position:relative; width:260px;">
+                <i class="ti ti-search" style="position:absolute; left:11px; top:50%; transform:translateY(-50%); font-size:15px; color:var(--text-muted);" aria-hidden="true"></i>
+                <input class="form-control" style="padding-left:32px;" type="text" placeholder="Cari nama / username...">
+              </div>
+            </div>
+            <div class="card table-card" style="margin-bottom:28px;">
+              <table>
+                <thead><tr><td>Nama lengkap</td><td>Username</td><td>Role</td><td>KRPH</td><td>Status</td><td></td></tr></thead>
+                <tbody id="userTableBody">
+                  <tr><td>Suparjo</td><td>krph.tegal01</td><td>KRPH</td><td>Resort Tegal 01</td><td><span class="badge badge-active">Aktif</span></td><td class="text-right"><i class="ti ti-edit" style="color:var(--text-muted); cursor:pointer; margin-right:10px;" aria-hidden="true"></i><i class="ti ti-trash" style="color:var(--danger); cursor:pointer;" aria-hidden="true"></i></td></tr>
+                  <tr><td>Asper Wilayah II</td><td>asper.wil2</td><td>Asper</td><td>&mdash;</td><td><span class="badge badge-active">Aktif</span></td><td class="text-right"><i class="ti ti-edit" style="color:var(--text-muted); cursor:pointer; margin-right:10px;" aria-hidden="true"></i><i class="ti ti-trash" style="color:var(--danger); cursor:pointer;" aria-hidden="true"></i></td></tr>
+                  <tr><td>KPH Pekalongan Timur</td><td>kph.pkl</td><td>KPH</td><td>&mdash;</td><td><span class="badge badge-active">Aktif</span></td><td class="text-right"><i class="ti ti-edit" style="color:var(--text-muted); cursor:pointer; margin-right:10px;" aria-hidden="true"></i><i class="ti ti-trash" style="color:var(--danger); cursor:pointer;" aria-hidden="true"></i></td></tr>
+                  <tr><td>Wahyudi</td><td>krph.pemalang01</td><td>KRPH</td><td>Resort Pemalang 01</td><td><span class="badge badge-inactive">Nonaktif</span></td><td class="text-right"><i class="ti ti-edit" style="color:var(--text-muted); cursor:pointer; margin-right:10px;" aria-hidden="true"></i><i class="ti ti-trash" style="color:var(--danger); cursor:pointer;" aria-hidden="true"></i></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="section-title" style="margin-bottom:12px;">Tambah user baru</div>
+            <div class="card" style="max-width:480px;">
+              <div class="form-group"><label>Nama lengkap</label><input class="form-control" id="userNamaBaru" type="text" placeholder="Nama pengguna"></div>
+              <div class="form-group"><label>Username</label><input class="form-control" id="userUsernameBaru" type="text" placeholder="krph.tegal03"></div>
+              <div class="form-row">
+                <div class="form-group"><label>Role</label><select class="form-control" id="userRoleBaru"><option>KRPH</option><option>Asper</option><option>KPH</option><option>Admin</option></select></div>
+                <div class="form-group"><label>KRPH (jika berlaku)</label><select class="form-control" id="userKrphBaru"><option>Resort Tegal 01</option><option>Resort Tegal 02</option><option>Resort Pemalang 01</option><option>&mdash;</option></select></div>
+              </div>
+              <div class="form-group"><label>Kata sandi awal</label><input class="form-control" type="password" placeholder="Akan diminta ganti saat login pertama"></div>
+              <div class="btn-row"><button class="btn btn-primary" onclick="tambahUser()">Simpan</button><button class="btn btn-outline" onclick="document.getElementById('userNamaBaru').value=''; document.getElementById('userUsernameBaru').value='';">Batal</button></div>
+            </div>
+          </div>
+
+          <!-- Tab: KRPH -->
+          <div class="tabpanel" id="tab-krph">
+            <div class="card table-card" style="margin-bottom:28px;">
+              <table>
+                <thead><tr><td>Nama resort (KRPH)</td><td>Wilayah</td><td class="text-right">Jumlah mandor/TAD</td><td>Status</td><td></td></tr></thead>
+                <tbody id="krphTableBody">
+                  <tr><td>Resort Tegal 01</td><td>Wilayah II</td><td class="text-right">3</td><td><span class="badge badge-active">Aktif</span></td><td class="text-right"><i class="ti ti-edit" style="color:var(--text-muted); cursor:pointer; margin-right:10px;" aria-hidden="true"></i><i class="ti ti-trash" style="color:var(--danger); cursor:pointer;" aria-hidden="true"></i></td></tr>
+                  <tr><td>Resort Tegal 02</td><td>Wilayah II</td><td class="text-right">2</td><td><span class="badge badge-active">Aktif</span></td><td class="text-right"><i class="ti ti-edit" style="color:var(--text-muted); cursor:pointer; margin-right:10px;" aria-hidden="true"></i><i class="ti ti-trash" style="color:var(--danger); cursor:pointer;" aria-hidden="true"></i></td></tr>
+                  <tr><td>Resort Pemalang 01</td><td>Wilayah III</td><td class="text-right">1</td><td><span class="badge badge-inactive">Nonaktif</span></td><td class="text-right"><i class="ti ti-edit" style="color:var(--text-muted); cursor:pointer; margin-right:10px;" aria-hidden="true"></i><i class="ti ti-trash" style="color:var(--danger); cursor:pointer;" aria-hidden="true"></i></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="section-title" style="margin-bottom:12px;">Tambah / edit KRPH</div>
+            <div class="card" style="max-width:480px;">
+              <div class="form-group"><label>Nama resort</label><input class="form-control" id="krphNamaBaru" type="text" placeholder="Resort Tegal 03"></div>
+              <div class="form-group"><label>Wilayah</label><select class="form-control" id="krphWilayahBaru"><option>Wilayah I</option><option>Wilayah II</option><option>Wilayah III</option></select></div>
+              <div class="btn-row"><button class="btn btn-primary" onclick="tambahKrph()">Simpan</button><button class="btn btn-outline" onclick="document.getElementById('krphNamaBaru').value=''">Batal</button></div>
+            </div>
+          </div>
+
+          <!-- Tab: Mandor/TAD -->
+          <div class="tabpanel" id="tab-mandor">
+            <div class="card table-card" style="margin-bottom:28px;">
+              <table>
+                <thead><tr><td>Nama</td><td>Jenis</td><td>KRPH</td><td>Status</td><td></td></tr></thead>
+                <tbody id="adminMandorTableBody">
+                  <tr><td>Suryanto</td><td><span class="badge badge-mandor">Mandor</span></td><td>Resort Tegal 01</td><td><span class="badge badge-active">Aktif</span></td><td class="text-right"><i class="ti ti-edit" style="color:var(--text-muted); cursor:pointer; margin-right:10px;" aria-hidden="true"></i><i class="ti ti-trash" style="color:var(--danger); cursor:pointer;" aria-hidden="true"></i></td></tr>
+                  <tr><td>Karto Wijaya</td><td><span class="badge badge-tad">TAD</span></td><td>Resort Tegal 01</td><td><span class="badge badge-active">Aktif</span></td><td class="text-right"><i class="ti ti-edit" style="color:var(--text-muted); cursor:pointer; margin-right:10px;" aria-hidden="true"></i><i class="ti ti-trash" style="color:var(--danger); cursor:pointer;" aria-hidden="true"></i></td></tr>
+                  <tr><td>Slamet Riyadi</td><td><span class="badge badge-mandor">Mandor</span></td><td>Resort Tegal 01</td><td><span class="badge badge-active">Aktif</span></td><td class="text-right"><i class="ti ti-edit" style="color:var(--text-muted); cursor:pointer; margin-right:10px;" aria-hidden="true"></i><i class="ti ti-trash" style="color:var(--danger); cursor:pointer;" aria-hidden="true"></i></td></tr>
+                  <tr><td>Wardi</td><td><span class="badge badge-mandor">Mandor</span></td><td>Resort Tegal 02</td><td><span class="badge badge-active">Aktif</span></td><td class="text-right"><i class="ti ti-edit" style="color:var(--text-muted); cursor:pointer; margin-right:10px;" aria-hidden="true"></i><i class="ti ti-trash" style="color:var(--danger); cursor:pointer;" aria-hidden="true"></i></td></tr>
+                  <tr><td>Rasmin</td><td><span class="badge badge-tad">TAD</span></td><td>Resort Pemalang 01</td><td><span class="badge badge-inactive">Nonaktif</span></td><td class="text-right"><i class="ti ti-edit" style="color:var(--text-muted); cursor:pointer; margin-right:10px;" aria-hidden="true"></i><i class="ti ti-trash" style="color:var(--danger); cursor:pointer;" aria-hidden="true"></i></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="section-title" style="margin-bottom:12px;">Tambah mandor / TAD baru</div>
+            <div class="card" style="max-width:480px;">
+              <div class="form-group"><label>Nama</label><input class="form-control" id="adminMandorNamaBaru" type="text" placeholder="Nama pekerja"></div>
+              <div class="form-row">
+                <div class="form-group"><label>Jenis</label><select class="form-control" id="adminMandorJenisBaru"><option>Mandor</option><option>TAD</option></select></div>
+                <div class="form-group"><label>KRPH</label><select class="form-control" id="adminMandorKrphBaru"><option>Resort Tegal 01</option><option>Resort Tegal 02</option><option>Resort Pemalang 01</option></select></div>
+              </div>
+              <div class="btn-row"><button class="btn btn-primary" onclick="tambahAdminMandor()">Simpan</button><button class="btn btn-outline" onclick="document.getElementById('adminMandorNamaBaru').value=''">Batal</button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Log backup -->
+        <div class="subview" id="admin-backup">
+          <div class="eyebrow">Riwayat sistem</div>
+          <div class="page-title">Log Backup Persediaan</div>
+          <div class="page-sub">Proses arsip data berjalan otomatis, tidak ada aksi manual</div>
+          <div class="banner"><i class="ti ti-clock-check" aria-hidden="true"></i><div>Backup dijalankan otomatis oleh sistem (MySQL Event Scheduler) setiap <strong>14 hari</strong>. Seluruh data di tabel aktif dipindahkan ke tabel riwayat, lalu tabel aktif dikosongkan. Tidak tersedia tombol backup manual.</div></div>
+          <div class="card table-card">
+            <table>
+              <thead><tr><td>Periode awal</td><td>Periode akhir</td><td>Tanggal backup</td><td class="text-right">Jumlah baris diarsipkan</td><td>Dijalankan oleh</td></tr></thead>
+              <tbody>
+                <tr><td>9 Jun 2026</td><td>22 Jun 2026</td><td>23 Jun 2026, 00:00</td><td class="text-right">184</td><td><span class="badge badge-system">system</span></td></tr>
+                <tr><td>26 Mei 2026</td><td>8 Jun 2026</td><td>9 Jun 2026, 00:00</td><td class="text-right">176</td><td><span class="badge badge-system">system</span></td></tr>
+                <tr><td>12 Mei 2026</td><td>25 Mei 2026</td><td>26 Mei 2026, 00:00</td><td class="text-right">190</td><td><span class="badge badge-system">system</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <footer class="mini">Backup berjalan otomatis setiap 2 minggu &middot; LAGETA v1.0</footer>
+  </div>
+</section>
+
+<!-- ======================================================= MODAL: Ganti kata sandi ======================================================= -->
+<div class="modal-mask" id="passwordModal" onclick="if(event.target===this) closePasswordModal()">
+  <div class="modal-box">
+    <h3>Ganti kata sandi</h3>
+    <div class="modal-sub">Berlaku untuk akun yang sedang aktif</div>
+    <div class="form-group"><label>Kata sandi saat ini</label><input class="form-control" type="password"></div>
+    <div class="form-group"><label>Kata sandi baru</label><input class="form-control" type="password"></div>
+    <div class="form-group" style="margin-bottom:6px;"><label>Ulangi kata sandi baru</label><input class="form-control" type="password"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="alert('Kata sandi berhasil diperbarui (demo).'); closePasswordModal();">Simpan perubahan</button>
+      <button class="btn btn-outline" onclick="closePasswordModal()">Batal</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ navigation ============ */
+let selectedRole = 'krph';
+
+function goView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  document.querySelectorAll('.demo-switch > button[data-view]').forEach(b=>{
+    b.classList.toggle('active', b.dataset.view===name);
+  });
+  closeAllProfileMenus();
+  // ukur ulang & gambar ulang chart begitu kontainernya benar-benar terlihat (lebar 0 saat display:none)
+  if(name==='krph') renderKrphChart();
+  if(name==='dashboard') updateDashboard();
+}
+
+function goSub(view, subId){
+  const scope = document.getElementById('view-'+view);
+  scope.querySelectorAll('.subview').forEach(s=>s.classList.remove('active'));
+  document.getElementById(subId).classList.add('active');
+  scope.querySelectorAll('.sidebar a').forEach(a=>a.classList.toggle('active', a.dataset.sub===subId));
+
+  if(subId==='krph-dashboard') renderKrphChart();
+  if(subId==='dash-dashboard') updateDashboard();
+  if(subId==='dash-riwayat-2minggu') updateDashRiwayat();
+}
+
+function goTab(tabId){
+  document.querySelectorAll('#admin-kelola .tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===tabId));
+  document.querySelectorAll('#admin-kelola .tabpanel').forEach(p=>p.classList.toggle('active', p.id===tabId));
+}
+
+function selectRole(role){
+  selectedRole = role;
+  document.querySelectorAll('.role-chip').forEach(c=>c.classList.toggle('selected', c.dataset.role===role));
+}
+
+function doLogin(){
+  const roleToView = { krph:'krph', asper:'dashboard', kph:'dashboard', admin:'admin' };
+  if(selectedRole==='asper'){
+    document.getElementById('dashAvatar').textContent = 'AS';
+    document.getElementById('dashUserName').textContent = 'Asper Wilayah II';
+    document.getElementById('dashTitle').textContent = 'Ringkasan Wilayah II';
+    document.getElementById('riwayatDashTitle').innerHTML = 'Riwayat 2 mingguan &middot; Wilayah II';
+  } else if(selectedRole==='kph'){
+    document.getElementById('dashAvatar').textContent = 'KP';
+    document.getElementById('dashUserName').textContent = 'KPH Pekalongan Timur';
+    document.getElementById('dashTitle').textContent = 'Ringkasan Kesatuan Pekalongan Timur';
+    document.getElementById('riwayatDashTitle').innerHTML = 'Riwayat 2 mingguan &middot; Kesatuan Pekalongan Timur';
+  }
+  goView(roleToView[selectedRole]);
+  if(roleToView[selectedRole]==='dashboard') updateDashboard();
+}
+
+/* ============ profile dropdown ============ */
+function toggleProfileMenu(ev, key){
+  ev.stopPropagation();
+  const menu = document.getElementById('profileMenu-'+key);
+  const isOpen = menu.classList.contains('open');
+  closeAllProfileMenus();
+  if(!isOpen) menu.classList.add('open');
+}
+function closeAllProfileMenus(){
+  document.querySelectorAll('.profile-menu').forEach(m=>m.classList.remove('open'));
+}
+document.addEventListener('click', closeAllProfileMenus);
+
+/* ============ password modal ============ */
+function openPasswordModal(ev){
+  if(ev) ev.stopPropagation();
+  closeAllProfileMenus();
+  document.getElementById('passwordModal').classList.add('open');
+}
+function closePasswordModal(){
+  document.getElementById('passwordModal').classList.remove('open');
+}
+
+/* ============ KRPH: SATU SUMBER DATA untuk periode berjalan ============
+   krphEntries adalah simulasi baris-baris tabel stok_getah untuk Resort Tegal 01
+   (resort milik KRPH yang sedang login di demo ini). Semua tampilan turunannya
+   -- grafik, KPI card, tabel "Riwayat input saya", dan baris Resort Tegal 01 di
+   dashboard Asper/KPH -- dihitung ULANG dari array ini, supaya tidak mungkin ada
+   angka yang beda-beda sendiri seperti sebelumnya. */
+const KRPH_DAYS = ['23 Jun','24 Jun','25 Jun','26 Jun','27 Jun','28 Jun','29 Jun','30 Jun','1 Jul','2 Jul','3 Jul','4 Jul','5 Jul','6 Jul'];
+const KRPH_TANGGAL_FULL = {'23 Jun':'23 Jun 2026','24 Jun':'24 Jun 2026','25 Jun':'25 Jun 2026','26 Jun':'26 Jun 2026','27 Jun':'27 Jun 2026','28 Jun':'28 Jun 2026','29 Jun':'29 Jun 2026','30 Jun':'30 Jun 2026','1 Jul':'1 Jul 2026','2 Jul':'2 Jul 2026','3 Jul':'3 Jul 2026','4 Jul':'4 Jul 2026','5 Jul':'5 Jul 2026','6 Jul':'6 Jul 2026'};
+
+let krphEntries = [
+  {tanggal:'23 Jun', nama:'Suryanto', jenis:'Mandor', produksi:31, angkutan:20},
+  {tanggal:'23 Jun', nama:'Karto Wijaya', jenis:'TAD', produksi:24, angkutan:15},
+  {tanggal:'24 Jun', nama:'Suryanto', jenis:'Mandor', produksi:34, angkutan:23},
+  {tanggal:'24 Jun', nama:'Karto Wijaya', jenis:'TAD', produksi:26, angkutan:17},
+  {tanggal:'25 Jun', nama:'Suryanto', jenis:'Mandor', produksi:33, angkutan:26},
+  {tanggal:'25 Jun', nama:'Karto Wijaya', jenis:'TAD', produksi:25, angkutan:19},
+  {tanggal:'26 Jun', nama:'Suryanto', jenis:'Mandor', produksi:35, angkutan:28},
+  {tanggal:'26 Jun', nama:'Karto Wijaya', jenis:'TAD', produksi:27, angkutan:22},
+  {tanggal:'27 Jun', nama:'Suryanto', jenis:'Mandor', produksi:31, angkutan:22},
+  {tanggal:'27 Jun', nama:'Karto Wijaya', jenis:'TAD', produksi:23, angkutan:16},
+  {tanggal:'28 Jun', nama:'Suryanto', jenis:'Mandor', produksi:34, angkutan:24},
+  {tanggal:'28 Jun', nama:'Karto Wijaya', jenis:'TAD', produksi:25, angkutan:18},
+  {tanggal:'29 Jun', nama:'Suryanto', jenis:'Mandor', produksi:32, angkutan:25},
+  {tanggal:'29 Jun', nama:'Karto Wijaya', jenis:'TAD', produksi:25, angkutan:19},
+  {tanggal:'30 Jun', nama:'Suryanto', jenis:'Mandor', produksi:33, angkutan:23},
+  {tanggal:'30 Jun', nama:'Karto Wijaya', jenis:'TAD', produksi:25, angkutan:17},
+  {tanggal:'1 Jul', nama:'Suryanto', jenis:'Mandor', produksi:35, angkutan:26},
+  {tanggal:'1 Jul', nama:'Karto Wijaya', jenis:'TAD', produksi:27, angkutan:19},
+  {tanggal:'2 Jul', nama:'Suryanto', jenis:'Mandor', produksi:31, angkutan:28},
+  {tanggal:'2 Jul', nama:'Karto Wijaya', jenis:'TAD', produksi:23, angkutan:22},
+  {tanggal:'3 Jul', nama:'Suryanto', jenis:'Mandor', produksi:34, angkutan:20},
+  {tanggal:'3 Jul', nama:'Karto Wijaya', jenis:'TAD', produksi:26, angkutan:15},
+  {tanggal:'4 Jul', nama:'Suryanto', jenis:'Mandor', produksi:32, angkutan:23},
+  {tanggal:'4 Jul', nama:'Karto Wijaya', jenis:'TAD', produksi:25, angkutan:17},
+  {tanggal:'5 Jul', nama:'Suryanto', jenis:'Mandor', produksi:31, angkutan:31},
+  {tanggal:'5 Jul', nama:'Karto Wijaya', jenis:'TAD', produksi:24, angkutan:24},
+  {tanggal:'6 Jul', nama:'Suryanto', jenis:'Mandor', produksi:34, angkutan:20},
+  {tanggal:'6 Jul', nama:'Karto Wijaya', jenis:'TAD', produksi:26, angkutan:15}
+];
+
+let krphDays = [], krphProduksi = [], krphAngkutan = [];
+
+/* Hitung ulang total harian (untuk grafik) dari krphEntries */
+function aggregateKrphByDay(entries){
+  const prodMap = {}, angMap = {};
+  KRPH_DAYS.forEach(d=>{ prodMap[d]=0; angMap[d]=0; });
+  entries.forEach(e=>{ prodMap[e.tanggal]+=e.produksi; angMap[e.tanggal]+=e.angkutan; });
+  return { days: KRPH_DAYS.slice(), produksi: KRPH_DAYS.map(d=>prodMap[d]), angkutan: KRPH_DAYS.map(d=>angMap[d]) };
+}
+
+/* Hitung ulang total per-pekerja (untuk baris mandor di dashboard Asper/KPH) dari krphEntries */
+function aggregateKrphByWorker(entries){
+  const map = {};
+  entries.forEach(e=>{
+    if(!map[e.nama]) map[e.nama] = {nama:e.nama, jenis:e.jenis, produksi:0, angkutan:0};
+    map[e.nama].produksi += e.produksi;
+    map[e.nama].angkutan += e.angkutan;
+  });
+  return Object.values(map).map(w=>[w.nama, w.jenis, w.produksi, w.angkutan, w.produksi-w.angkutan]);
+}
+
+/* Titik pusat sinkronisasi: dipanggil tiap kali krphEntries berubah (input baru).
+   Meng-update SEMUA turunan: grafik KRPH, KPI KRPH, tabel riwayat input saya,
+   dan baris Resort Tegal 01 pada dashboardDatasets.current (dashboard Asper/KPH). */
+function recomputeKrphDerived(){
+  const agg = aggregateKrphByDay(krphEntries);
+  krphDays = agg.days; krphProduksi = agg.produksi; krphAngkutan = agg.angkutan;
+
+  const totalP = krphProduksi.reduce((a,b)=>a+b,0);
+  const totalA = krphAngkutan.reduce((a,b)=>a+b,0);
+  const totalS = totalP - totalA;
+
+  const mp = document.getElementById('krphMetricProduksi');
+  const ma = document.getElementById('krphMetricAngkutan');
+  const ms = document.getElementById('krphMetricSisa');
+  if(mp){ mp.textContent = totalP + ' kg'; ma.textContent = totalA + ' kg'; ms.textContent = totalS + ' kg'; }
+
+  renderKrphChart();
+  renderRiwayatSayaTable();
+
+  // sinkron ke dashboard Asper/KPH: Resort Tegal 01 dihitung ULANG dari krphEntries,
+  // bukan disimpan manual terpisah -- ini yang menjamin dua tampilan selalu sama.
+  const NAMA_RESORT_SAYA = 'Resort Tegal 01';
+  const workerRows = aggregateKrphByWorker(krphEntries);
+  const dsCurrent = dashboardDatasets.current;
+  dsCurrent.mandor[NAMA_RESORT_SAYA] = workerRows;
+  let resortRow = dsCurrent.resort.find(r=>r[0]===NAMA_RESORT_SAYA);
+  if(!resortRow){ resortRow=[NAMA_RESORT_SAYA,0,0,0,'Terkini']; dsCurrent.resort.push(resortRow); }
+  resortRow[1]=totalP; resortRow[2]=totalA; resortRow[3]=totalS; resortRow[4]='Terkini';
+
+  // total metrik current = jumlah ulang semua resort (bukan tambah manual, biar tidak drift)
+  dsCurrent.metrics[0] = dsCurrent.resort.reduce((s,r)=>s+r[1],0);
+  dsCurrent.metrics[1] = dsCurrent.resort.reduce((s,r)=>s+r[2],0);
+  dsCurrent.metrics[2] = dsCurrent.metrics[0] - dsCurrent.metrics[1];
+}
+
+/* Render tabel "Riwayat input saya" langsung dari krphEntries, urut tanggal terbaru dulu */
+function renderRiwayatSayaTable(){
+  const body = document.getElementById('riwayatSayaBody');
+  if(!body) return;
+  const sorted = krphEntries.slice().sort((a,b)=> KRPH_DAYS.indexOf(b.tanggal) - KRPH_DAYS.indexOf(a.tanggal));
+  body.innerHTML = '';
+  sorted.forEach(e=>{
+    const row = document.createElement('tr');
+    const sisa = e.produksi - e.angkutan;
+    row.innerHTML = `<td>${KRPH_TANGGAL_FULL[e.tanggal]}</td><td>${e.nama}</td><td class="text-right">${e.produksi}</td><td class="text-right">${e.angkutan}</td><td class="text-right">${sisa}</td>`;
+    body.appendChild(row);
+  });
+}
+
+function toggleKrphInputForm(){
+  const el = document.getElementById('krphInputForm');
+  el.style.display = (el.style.display==='none' || el.style.display==='') ? 'block' : 'none';
+}
+
+function hitungSisa(){
+  const p = parseFloat(document.getElementById('produksiInput').value)||0;
+  const a = parseFloat(document.getElementById('angkutanInput').value)||0;
+  document.getElementById('sisaOutput').textContent = (p-a) + ' kg';
+}
+function batalInput(){
+  document.getElementById('produksiInput').value = '';
+  document.getElementById('angkutanInput').value = '';
+  document.getElementById('sisaOutput').textContent = '0 kg';
+}
+
+function simpanKrphInput(){
+  const nama = document.getElementById('mandorSelect').value;
+  const p = parseFloat(document.getElementById('produksiInput').value)||0;
+  const a = parseFloat(document.getElementById('angkutanInput').value)||0;
+  if(p===0 && a===0){ alert('Isi produksi atau angkutan terlebih dahulu.'); return; }
+  const namaBersih = nama.replace(' (Mandor)','').replace(' (TAD)','');
+  const jenisPekerja = nama.includes('(TAD)') ? 'TAD' : 'Mandor';
+  const HARI_INI = '6 Jul'; // di implementasi nyata: tanggal server saat ini
+
+  // satu-satunya tempat data baru masuk -- semua tampilan lain ikut ter-update
+  // otomatis lewat recomputeKrphDerived() karena semuanya dihitung dari array ini.
+  krphEntries.push({tanggal:HARI_INI, nama:namaBersih, jenis:jenisPekerja, produksi:p, angkutan:a});
+  recomputeKrphDerived();
+
+  batalInput();
+  toggleKrphInputForm();
+}
+
+function renderKrphChart(){
+  const krphSisa = cumulativeSisa(krphProduksi, krphAngkutan, 0);
+  renderPillChart('krphChartSvg', krphDays, krphProduksi, krphAngkutan, krphSisa);
+}
+
+const krphRiwayat2minggu = {
+  '1': [['Suryanto','410 kg','390 kg','20 kg'],['Karto Wijaya','310 kg','300 kg','10 kg']],
+  '2': [['Suryanto','380 kg','380 kg','0 kg'],['Karto Wijaya','300 kg','290 kg','10 kg']],
+  '3': [['Suryanto','400 kg','390 kg','10 kg'],['Karto Wijaya','290 kg','290 kg','0 kg']]
+};
+function gantiPeriodeKrph(val){
+  const body = document.getElementById('krphRiwayat2mingguBody');
+  body.innerHTML = '';
+  krphRiwayat2minggu[val].forEach(r=>{
+    const row = document.createElement('tr');
+    row.innerHTML = `<td>${r[0]}</td><td class="text-right">${r[1]}</td><td class="text-right">${r[2]}</td><td class="text-right">${r[3]}</td>`;
+    body.appendChild(row);
+  });
+}
+
+/* ============ Dashboard Asper / KPH — single page, filterable ============ */
+const dashboardDatasets = {
+  current: {
+    // Resort Tegal 01: diisi otomatis oleh recomputeKrphDerived() dari krphEntries,
+    // JANGAN diisi manual di sini supaya tidak ada 2 sumber data yang beda.
+    metrics:[0,0,0],
+    resort:[
+      ['Resort Tegal 01',0,0,0,'Terkini'],
+      ['Resort Tegal 02',600,580,20,'Terkini'],
+      ['Resort Pemalang 01',480,460,20,'Belum input']
+    ],
+    mandor:{
+      'Resort Tegal 01':[],
+      'Resort Tegal 02':[['Wardi','Mandor',600,580,20]],
+      'Resort Pemalang 01':[['Rasmin','TAD',480,460,20]]
+    }
+  },
+  p1: {
+    metrics:[1870,1805,65],
+    resort:[['Resort Tegal 01',720,690,30,''],['Resort Tegal 02',610,610,0,''],['Resort Pemalang 01',540,505,35,'']],
+    mandor:{
+      'Resort Tegal 01':[['Suryanto','Mandor',410,390,20],['Karto Wijaya','TAD',310,300,10]],
+      'Resort Tegal 02':[['Wardi','Mandor',610,610,0]],
+      'Resort Pemalang 01':[['Rasmin','TAD',540,505,35]]
+    }
+  },
+  p2: {
+    metrics:[1760,1720,40],
+    resort:[['Resort Tegal 01',680,670,10,''],['Resort Tegal 02',580,580,0,''],['Resort Pemalang 01',500,470,30,'']],
+    mandor:{
+      'Resort Tegal 01':[['Suryanto','Mandor',380,380,0],['Karto Wijaya','TAD',300,290,10]],
+      'Resort Tegal 02':[['Wardi','Mandor',580,580,0]],
+      'Resort Pemalang 01':[['Rasmin','TAD',500,470,30]]
+    }
+  },
+  p3: {
+    metrics:[1810,1790,20],
+    resort:[['Resort Tegal 01',690,680,10,''],['Resort Tegal 02',600,590,10,''],['Resort Pemalang 01',520,520,0,'']],
+    mandor:{
+      'Resort Tegal 01':[['Suryanto','Mandor',400,390,10],['Karto Wijaya','TAD',290,290,0]],
+      'Resort Tegal 02':[['Wardi','Mandor',600,590,10]],
+      'Resort Pemalang 01':[['Rasmin','TAD',520,520,0]]
+    }
+  }
+};
+const periodeLabel = {
+  current:'Periode berjalan &middot; 23 Jun &ndash; 6 Jul 2026',
+  p1:'Data arsip &middot; 9 Jun &ndash; 22 Jun 2026',
+  p2:'Data arsip &middot; 26 Mei &ndash; 8 Jun 2026',
+  p3:'Data arsip &middot; 12 Mei &ndash; 25 Mei 2026'
+};
+
+function updateDashboard(){
+  const region = document.getElementById('dashKrphFilter').value;
+  const ds = dashboardDatasets.current;
+
+  document.getElementById('dashSub').innerHTML = periodeLabel.current;
+  document.getElementById('dashTableBadge').textContent = 'Data periode berjalan';
+  document.getElementById('dashTableBadge').className = 'badge badge-active';
+
+  const body = document.getElementById('dashTableBody');
+  body.innerHTML = '';
+
+  if(region==='all'){
+    document.getElementById('dashTableTitle').textContent = 'Rekap per resort (KRPH)';
+    const labels=[], prodArr=[], angArr=[], sisArr=[];
+    ds.resort.forEach(r=>{
+      labels.push(r[0].replace('Resort ','')); prodArr.push(r[1]); angArr.push(r[2]); sisArr.push(r[3]);
+
+      const statusCell = r[4] ? statusBadge(r[4]) : '<span style="color:var(--text-muted); font-size:11px;">&mdash;</span>';
+      const row = document.createElement('div');
+      row.className = 'list-row';
+      row.onclick = ()=>{ document.getElementById('dashKrphFilter').value = r[0]; updateDashboard(); };
+      row.innerHTML = `
+        <div class="list-row-main"><span class="list-row-name">${r[0]}</span></div>
+        <div class="list-row-nums">
+          <div><span class="num-label">Produksi</span><b>${r[1]} kg</b></div>
+          <div><span class="num-label">Angkutan</span><b>${r[2]} kg</b></div>
+          <div><span class="num-label">Sisa</span><b>${r[3]} kg</b></div>
+        </div>
+        ${statusCell}
+        <i class="ti ti-chevron-right" aria-hidden="true"></i>`;
+      body.appendChild(row);
+    });
+    renderPillChart('dashChartSvg', labels, prodArr, angArr, sisArr);
+    setMetrics(ds.metrics[0], ds.metrics[1], ds.metrics[2]);
+  } else {
+    document.getElementById('dashTableTitle').textContent = 'Rincian per mandor / TAD \u00b7 ' + region;
+    const rows = ds.mandor[region] || [];
+    let totalP=0, totalA=0, totalS=0;
+    const labels=[], prodArr=[], angArr=[], sisArr=[];
+    rows.forEach(m=>{
+      totalP += m[2]; totalA += m[3]; totalS += m[4];
+      labels.push(m[0]); prodArr.push(m[2]); angArr.push(m[3]); sisArr.push(m[4]);
+
+      const badgeClass = m[1]==='TAD' ? 'badge-tad' : 'badge-mandor';
+      const row = document.createElement('div');
+      row.className = 'list-row';
+      row.innerHTML = `
+        <div class="list-row-main"><span class="list-row-name">${m[0]}</span> <span class="badge ${badgeClass}">${m[1]}</span></div>
+        <div class="list-row-nums">
+          <div><span class="num-label">Produksi</span><b>${m[2]} kg</b></div>
+          <div><span class="num-label">Angkutan</span><b>${m[3]} kg</b></div>
+          <div><span class="num-label">Sisa</span><b>${m[4]} kg</b></div>
+        </div>`;
+      body.appendChild(row);
+    });
+    if(!rows.length){ body.innerHTML = '<div class="list-empty">Belum ada data untuk resort ini.</div>'; }
+    renderPillChart('dashChartSvg', labels, prodArr, angArr, sisArr);
+    setMetrics(totalP, totalA, totalS);
+  }
+}
+
+/* ============ Riwayat 2 minggu — Asper / KPH (arsip per resort, drill-down per mandor) ============ */
+function updateDashRiwayat(){
+  const region = document.getElementById('riwayatKrphFilter').value;
+  const periode = document.getElementById('riwayatPeriodeSelect').value;
+  const ds = dashboardDatasets[periode];
+
+  document.getElementById('riwayatDashSub').innerHTML = periodeLabel[periode];
+
+  const body = document.getElementById('riwayatDashTableBody');
+  body.innerHTML = '';
+
+  if(region==='all'){
+    document.getElementById('riwayatDashTableTitle').textContent = 'Rekap per resort (KRPH)';
+    ds.resort.forEach(r=>{
+      const row = document.createElement('div');
+      row.className = 'list-row';
+      row.onclick = ()=>{ document.getElementById('riwayatKrphFilter').value = r[0]; updateDashRiwayat(); };
+      row.innerHTML = `
+        <div class="list-row-main"><span class="list-row-name">${r[0]}</span></div>
+        <div class="list-row-nums">
+          <div><span class="num-label">Produksi</span><b>${r[1]} kg</b></div>
+          <div><span class="num-label">Angkutan</span><b>${r[2]} kg</b></div>
+          <div><span class="num-label">Sisa</span><b>${r[3]} kg</b></div>
+        </div>
+        <i class="ti ti-chevron-right" aria-hidden="true"></i>`;
+      body.appendChild(row);
+    });
+  } else {
+    document.getElementById('riwayatDashTableTitle').textContent = 'Rincian per mandor / TAD \u00b7 ' + region;
+    const rows = ds.mandor[region] || [];
+    rows.forEach(m=>{
+      const badgeClass = m[1]==='TAD' ? 'badge-tad' : 'badge-mandor';
+      const row = document.createElement('div');
+      row.className = 'list-row';
+      row.innerHTML = `
+        <div class="list-row-main"><span class="list-row-name">${m[0]}</span> <span class="badge ${badgeClass}">${m[1]}</span></div>
+        <div class="list-row-nums">
+          <div><span class="num-label">Produksi</span><b>${m[2]} kg</b></div>
+          <div><span class="num-label">Angkutan</span><b>${m[3]} kg</b></div>
+          <div><span class="num-label">Sisa</span><b>${m[4]} kg</b></div>
+        </div>`;
+      body.appendChild(row);
+    });
+    if(!rows.length){ body.innerHTML = '<div class="list-empty">Belum ada data untuk resort ini.</div>'; }
+  }
+}
+function statusBadge(s){
+  const cls = s==='Terkini' ? 'badge-active' : 'badge-inactive';
+  return `<span class="badge ${cls}">${s}</span>`;
+}
+function setMetrics(p,a,s){
+  document.getElementById('dashMetricProduksi').textContent = p.toLocaleString('id-ID') + ' kg';
+  document.getElementById('dashMetricAngkutan').textContent = a.toLocaleString('id-ID') + ' kg';
+  document.getElementById('dashMetricSisa').textContent = s.toLocaleString('id-ID') + ' kg';
+}
+
+/* Grafik batang bergaya "pill label" — 3 bar per grup: Produksi, Angkutan, Sisa
+   Dipakai dashboard KRPH & dashboard Asper/KPH.
+   Lebar mengikuti lebar kontainer (elastis) supaya chart selalu memenuhi kartu,
+   bukan mengecil/nyuplik di tengah saat data sedikit. */
+function renderPillChart(containerId, labels, seriesA, seriesB, seriesC){
+  const el = document.getElementById(containerId);
+  const n = labels.length;
+  if(!n){ el.innerHTML = '<div class="list-empty">Belum ada data untuk ditampilkan.</div>'; return; }
+
+  const measuredW = el.clientWidth || (el.parentElement ? el.parentElement.clientWidth : 0);
+  const availW = Math.max(measuredW, 320);
+
+  const sidePad = 16, groupGap = 20;
+  const rawGroupW = (availW - sidePad*2 - (n-1)*groupGap) / n;
+  const groupW = Math.max(rawGroupW, 66);
+  const gapInner = Math.min(Math.max(groupW*0.08, 4), 8);
+  const barW = Math.min(Math.max((groupW - gapInner*2)/3, 14), 42);
+  const actualGroupW = barW*3 + gapInner*2;
+  const contentW = sidePad*2 + n*actualGroupW + (n-1)*groupGap;
+  const w = Math.max(availW, contentW);
+  const extraGap = n>1 ? Math.max(w - contentW, 0)/(n-1) : 0;
+
+  const plotH = 110, topPad = 34, bottomPad = 30;
+  const h = topPad + plotH + bottomPad;
+  const maxVal = Math.max(...seriesA, ...seriesB, ...seriesC, 1) * 1.2;
+  const baselineY = topPad + plotH;
+
+  function roundedTop(x, yTop, width, r){
+    const rr = Math.min(r, width/2, Math.max(baselineY - yTop, 0.5));
+    return `M${x},${baselineY} L${x},${yTop+rr} Q${x},${yTop} ${x+rr},${yTop} L${x+width-rr},${yTop} Q${x+width},${yTop} ${x+width},${yTop+rr} L${x+width},${baselineY} Z`;
+  }
+  function pill(cx, cy, text, kind){
+    const pw = Math.max(text.length*6.6 + 12, 26), ph = 18;
+    const x = cx - pw/2, y = cy - ph/2;
+    let bg='var(--forest-50)', fg='var(--forest-700)', fw=600;
+    if(kind==='b'){ bg='#FBF1DE'; fg='var(--wood-600)'; }
+    if(kind==='b-hit'){ bg='var(--gold-500)'; fg='var(--forest-900)'; fw=700; }
+    if(kind==='c'){ bg='#F0E9DC'; fg='var(--wood-600)'; }
+    return `<rect x="${x}" y="${y}" width="${pw}" height="${ph}" rx="9" fill="${bg}"/><text x="${cx}" y="${y+ph/2+3.2}" font-size="9.5" font-weight="${fw}" fill="${fg}" text-anchor="middle">${text}</text>`;
+  }
+
+  let content = '';
+  for(let i=0;i<n;i++){
+    const gx = sidePad + i*(actualGroupW + groupGap + extraGap);
+    const a = seriesA[i], b = seriesB[i], c = seriesC[i];
+    const hA = a>0 ? Math.max((a/maxVal)*plotH, 5) : 0;
+    const hB = b>0 ? Math.max((b/maxVal)*plotH, 5) : 0;
+    const hC = c>0 ? Math.max((c/maxVal)*plotH, 5) : 0;
+    const yA = baselineY - hA, yB = baselineY - hB, yC = baselineY - hC;
+    const bx = gx + barW + gapInner;
+    const cx3 = bx + barW + gapInner;
+    const hit = a>0 && b>=a;
+    const groupCenter = gx + actualGroupW/2;
+
+    content += `<path d="${roundedTop(gx,yA,barW,5)}" fill="var(--forest-600)"><title>${labels[i]} \u00b7 Produksi: ${a} kg</title></path>`;
+    content += `<path d="${roundedTop(bx,yB,barW,5)}" fill="var(--gold-500)"><title>${labels[i]} \u00b7 Angkutan: ${b} kg</title></path>`;
+    content += `<path d="${roundedTop(cx3,yC,barW,5)}" fill="var(--wood-500)"><title>${labels[i]} \u00b7 Sisa: ${c} kg</title></path>`;
+    content += pill(gx+barW/2, yA-12, String(a), 'a');
+    content += pill(bx+barW/2, yB-12, String(b), hit ? 'b-hit' : 'b');
+    content += pill(cx3+barW/2, yC-12, String(c), 'c');
+    content += `<text x="${groupCenter}" y="${baselineY+18}" font-size="11" fill="var(--text-mid)" text-anchor="middle">${labels[i]}</text>`;
+  }
+  content += `<line x1="${sidePad-6}" y1="${baselineY}" x2="${w-sidePad+6}" y2="${baselineY}" stroke="var(--line)" stroke-width="1"/>`;
+
+  el.innerHTML = `<svg width="100%" height="${h}" viewBox="0 0 ${w} ${h}" style="display:block; font-family:'Source Sans 3',sans-serif;">${content}</svg>`;
+}
+
+/* Saldo berjalan Sisa: Sisa(t) = Sisa(t-1) + Produksi(t) - Angkutan(t) */
+function cumulativeSisa(prodArr, angArr, startSisa){
+  let running = startSisa || 0;
+  return prodArr.map((p,i)=>{
+    running = Math.max(running + p - angArr[i], 0);
+    return running;
+  });
+}
+recomputeKrphDerived();
+updateDashboard();
+updateDashRiwayat();
+
+let resizeChartTimer;
+window.addEventListener('resize', ()=>{
+  clearTimeout(resizeChartTimer);
+  resizeChartTimer = setTimeout(()=>{
+    const activeView = document.querySelector('.view.active');
+    if(!activeView) return;
+    if(activeView.id==='view-krph' && activeView.querySelector('.subview.active')?.id==='krph-dashboard'){
+      renderKrphChart();
+    } else if(activeView.id==='view-dashboard' && activeView.querySelector('.subview.active')?.id==='dash-dashboard'){
+      updateDashboard();
+    }
+  }, 150);
+});
+
+/* ============ Admin: Kelola user (tab: user/krph/mandor) ============ */
+function tambahUser(){
+  const nama = document.getElementById('userNamaBaru').value.trim();
+  const username = document.getElementById('userUsernameBaru').value.trim();
+  if(!nama || !username){ alert('Isi nama lengkap dan username terlebih dahulu.'); return; }
+  const role = document.getElementById('userRoleBaru').value;
+  const krph = document.getElementById('userKrphBaru').value;
+  const row = document.createElement('tr');
+  row.innerHTML = `<td>${nama}</td><td>${username}</td><td>${role}</td><td>${krph}</td><td><span class="badge badge-active">Aktif</span></td><td class="text-right"><i class="ti ti-edit" style="color:var(--text-muted); cursor:pointer; margin-right:10px;" aria-hidden="true"></i><i class="ti ti-trash" style="color:var(--danger); cursor:pointer;" aria-hidden="true"></i></td>`;
+  document.getElementById('userTableBody').appendChild(row);
+  document.getElementById('userNamaBaru').value = '';
+  document.getElementById('userUsernameBaru').value = '';
+}
+function tambahKrph(){
+  const nama = document.getElementById('krphNamaBaru').value.trim();
+  if(!nama){ alert('Isi nama resort terlebih dahulu.'); return; }
+  const wilayah = document.getElementById('krphWilayahBaru').value;
+  const row = document.createElement('tr');
+  row.innerHTML = `<td>${nama}</td><td>${wilayah}</td><td class="text-right">0</td><td><span class="badge badge-active">Aktif</span></td><td class="text-right"><i class="ti ti-edit" style="color:var(--text-muted); cursor:pointer; margin-right:10px;" aria-hidden="true"></i><i class="ti ti-trash" style="color:var(--danger); cursor:pointer;" aria-hidden="true"></i></td>`;
+  document.getElementById('krphTableBody').appendChild(row);
+  document.getElementById('krphNamaBaru').value = '';
+}
+function tambahAdminMandor(){
+  const nama = document.getElementById('adminMandorNamaBaru').value.trim();
+  if(!nama){ alert('Isi nama pekerja terlebih dahulu.'); return; }
+  const jenis = document.getElementById('adminMandorJenisBaru').value;
+  const krph = document.getElementById('adminMandorKrphBaru').value;
+  const badgeClass = jenis==='TAD' ? 'badge-tad' : 'badge-mandor';
+  const row = document.createElement('tr');
+  row.innerHTML = `<td>${nama}</td><td><span class="badge ${badgeClass}">${jenis}</span></td><td>${krph}</td><td><span class="badge badge-active">Aktif</span></td><td class="text-right"><i class="ti ti-edit" style="color:var(--text-muted); cursor:pointer; margin-right:10px;" aria-hidden="true"></i><i class="ti ti-trash" style="color:var(--danger); cursor:pointer;" aria-hidden="true"></i></td>`;
+  document.getElementById('adminMandorTableBody').appendChild(row);
+  document.getElementById('adminMandorNamaBaru').value = '';
+}
+</script>
+
+</body>
+</html>
